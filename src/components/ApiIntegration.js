@@ -3,19 +3,12 @@ import { v4 as uuid } from "uuid";
 import { BsCheckCircle, BsCircle, BsPlus } from "react-icons/bs";
 import { RiCloseLine } from "react-icons/ri";
 
-const MultipleTodoLists = () => {
-  const [todosData, setTodosData] = useState([
-    {
-      id: uuid(),
-      title: "",
-      todoItem: { id: uuid(), text: "", isTodoMarked: false },
-      todos: [],
-      isActiveTodosTab: false,
-      isCompletedTodosTab: false,
-    },
-  ]);
+const ApiIntegration = () => {
+  const [title, setTitle] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [todosData, setTodosData] = useState([]);
 
-  const handleTitle = (id, e) => {
+ /*  const handleTitle = (id, e) => {
     const { name, value } = e.target;
     setTodosData((prevData) => {
       return prevData.map((todo) => {
@@ -28,7 +21,7 @@ const MultipleTodoLists = () => {
         };
       });
     });
-  };
+  }; */
   const handleChange = (id, e) => {
     const { name, value } = e.target;
     setTodosData((prevData) => {
@@ -262,17 +255,24 @@ const MultipleTodoLists = () => {
   }
 
   const addList = () => {
-    const list = {
-      id: uuid(),
-      title: "",
-      todoItem: { id: uuid(), text: "", isTodoMarked: false },
-      todos: [],
-      isActiveTodosTab: false,
-      isCompletedTodosTab: false,
-    };
-    setTodosData((prevData) => [...prevData, list]);
+    if (title) {
+      const list = {
+        id: uuid(),
+        title: title,
+        todoItem: { id: uuid(), text: "", isTodoMarked: false },
+        todos: [],
+        isActiveTodosTab: false,
+        isCompletedTodosTab: false,
+      };
+      setTodosData((prevData) => [...prevData, list]);
+    }
+    setTitle("");
+    setIsModalOpen(false);
   };
-
+  const add = () => {
+    setIsModalOpen(true);
+  };
+console.log(todosData)
   return (
     <>
       <div className="">
@@ -290,14 +290,17 @@ const MultipleTodoLists = () => {
                     className="bg-white  shadow-lg border-2 mx-auto border-gray-50 mb-5 break-inside-avoid max-w-2xl"
                     key={item.id}
                   >
-                    <input
+                    {/* <input
                       name="title"
                       type="text"
                       value={item.title}
                       onChange={(e) => handleTitle(item.id, e)}
                       placeholder="Title"
                       className=" tracking-wide text-center font-semibold placeholder:font-medium text-pink-700 placeholder:text-gray-200 px-3 border-b-[1px] text-4xl shadow-md border-gray-200 h-16 w-full outline-none"
-                    />
+                    /> */}
+                    <h2 className=" tracking-wide text-center font-semibold py-2  px-3 border-b-[1px] text-4xl shadow-md border-gray-200  w-full ">
+                      {item.title}
+                    </h2>
                     <form
                       onSubmit={(e) => {
                         handleSubmit(item.id, e);
@@ -361,22 +364,28 @@ const MultipleTodoLists = () => {
                         </button>
                       </div>
                     ) : null}
-                    {todosData.length > 1 && (
-                      <button
-                        className="w-full bg-pink-300"
-                        onClick={() => deleteList(item.id)}
-                      >
-                        Delete
-                      </button>
-                    )}
+                    <button
+                      className="w-full bg-pink-300"
+                      onClick={() => deleteList(item.id)}
+                    >
+                      Delete
+                    </button>
                   </section>
                 );
               })
             : null}
         </div>
       </div>
+      {isModalOpen && (
+        <TitleModal
+          title={title}
+          setTitle={setTitle}
+          handleAdd={addList}
+          setIsModalOpen={setIsModalOpen}
+        />
+      )}
       <button
-        onClick={addList}
+        onClick={add}
         className="rounded-md border-[2px] border-gray-400 bg-pink-300 py-2 w-24 mt-20 active:translate-y-[2px]"
       >
         <span className="flex">
@@ -388,4 +397,34 @@ const MultipleTodoLists = () => {
   );
 };
 
-export default MultipleTodoLists;
+function TitleModal({ title, setTitle, handleAdd, setIsModalOpen }) {
+  return (
+    <article className="bg-pink-100 flex flex-col p-5 border-2 border-gray-300 shadow-lg rounded-lg">
+      <input
+        className="placeholder:italic placeholder:text-gray-200 px-3 border-b-[1px] text-2xl shadow-md border-gray-200 h-12 w-full outline-none tracking-wider"
+        name="title"
+        type="text"
+        value={title}
+        placeholder="title"
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <span className="flex justify-around pt-2">
+        <button
+          className="border-2 border-red-400 px-2 py-1 rounded-[0.25rem] hover:bg-white"
+          onClick={() => setIsModalOpen(false)}
+        >
+          Cancel
+        </button>
+
+        <button
+          className="border-2 border-green-500 px-2 py-1 rounded-[0.25rem] hover:bg-white"
+          onClick={handleAdd}
+        >
+          Add
+        </button>
+      </span>
+    </article>
+  );
+}
+
+export default ApiIntegration;
