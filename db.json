@@ -1,0 +1,15 @@
+{
+  "lists": [],
+  "todos": [
+    {
+      "id": "969cbb75-26ce-46d6-90b6-1fefc2be2d9f",
+      "text": "test ",
+      "isTodoMarked": true
+    },
+    {
+      "id": "c74a1fad-a32c-422d-82d6-99370e46afa8",
+      "text": "Test 2",
+      "isTodoMarked": true
+    }
+  ]
+}
